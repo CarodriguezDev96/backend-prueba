@@ -13,7 +13,13 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// middleware para manejar el estandar en la respuesta del servidor
+Route::middleware('json.response')->group(function () {
+    Route::post('/user/register', 'ServicesController@registerUser');
+    Route::post('/user/login', 'ServicesController@loginUser');
+    // rutas protegidas con api_token
+    Route::middleware('token.auth')->group(function () {
+        Route::get('/user/logout', 'ServicesController@logoutUser');
+        Route::post('/message/create', 'ServicesController@saveMessage');
+    });
 });
